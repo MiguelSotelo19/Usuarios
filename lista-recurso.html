@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Lista de Recursos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .card {
+            width: 200px;
+            border-radius: 8px;
+            color: #fff;
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card .name {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .card .year,
+        .card .color {
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Lista de Recursos</h1>
+    <div class="container" id="lista-recursos"></div>
+
+    <script>
+        const getLista = async () => {
+            const url = "https://reqres.in/api/unknown";
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        "x-api-key": "reqres-free-v1"
+                    }
+                });
+                const data = await response.json();
+                mostrarDatos(data.data);
+            } catch (error) {
+                console.error("Error al obtener los datos:", error);
+            }
+        };
+
+        const mostrarDatos = (items) => {
+            const container = document.getElementById("lista-recursos");
+            items.forEach(item => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.style.backgroundColor = item.color;
+                card.innerHTML = `
+                    <div class="Nombre">${item.name}</div>
+                    <div class="color">Color: ${item.color}</div>
+                `;
+                container.appendChild(card);
+            });
+        };
+
+        getLista();
+    </script>
+
+</body>
+</html>
