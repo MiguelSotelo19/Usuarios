@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Usuario</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        img {
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #3498db;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        a:hover {
+            background-color: #2980b9;
+        }
+
+        .navbar {
+            background-color: #3498db;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #2980b9;
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="Lista-de-usuarios.html">Lista de Usuarios</a>
+        <a href="lista-recurso.html">Lista de Recursos</a>
+        <a href="Random.html">Usuario Aleatorio</a>
+        <a href="createUser.html">Crear Usuario</a>
+    </nav>
+
+
+    <div id="usuario" class="container">
+        <p>Cargando usuario...</p>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get('id');
+
+        const contenedor = document.getElementById('usuario');
+
+        if (userId) {
+            fetch(`https://reqres.in/api/users/${userId}`, {
+                headers: {
+                    "x-api-key": "reqres-free-v1"
+                }
+            })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('Usuario no encontrado');
+                }
+                return res.json();
+            })
+            .then(data => {
+                const usuario = data.data;
+
+                contenedor.innerHTML = `
+                    <img src="${usuario.avatar}" width="100" height="100" alt="Avatar de ${usuario.first_name}">
+                    <h2>${usuario.first_name} ${usuario.last_name}</h2>
+                    <p><strong>Email:</strong> ${usuario.email}</p>
+                    <a href="./index.html">← Volver a la lista</a>
+                `;
+            })
+            .catch(err => {
+                contenedor.innerHTML = `<p class="error">Error: ${err.message}</p>`;
+            });
+        } else {
+            contenedor.innerHTML = `<p class="error">No se proporcionó un ID de usuario válido.</p>`;
+        }
+    </script>
+</body>
+</html>
